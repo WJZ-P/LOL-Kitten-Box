@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "hexgate": "^0.14.8",
+    "sudo-js": "^1.0.2",
+    "sudo-prompt": "^9.2.1"
+  },
+  "type": "module"
+}
