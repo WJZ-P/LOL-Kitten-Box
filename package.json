@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "colors": "^1.4.0",
     "dayjs": "^1.11.11",
     "hexgate": "^0.14.8",
     "sudo-js": "^1.0.2",
