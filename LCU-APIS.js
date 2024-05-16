@@ -20,6 +20,10 @@ const {
 // /lol-champ-select/v1/pin-drop-notification   这个接口显示选人的时候的红蓝方，每个队友的选路等信息
 // /lol-champ-select/v1/session/bench/swap/777  可能是大乱斗选上面的英雄？还是和队友换？未测试,777是英雄ID
 
+//睡眠函数
+function sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /**
  * 一个简单的获取data的函数
@@ -134,6 +138,18 @@ async function getFriendsNames(){
     return await getData('/lol-chat/v1/friends/summoner-names')
 }
 
+/**
+ * 向好友发送信息
+ * @param summonerName 召唤师名
+ * @param message       发送的信息内容
+ */
+async function sendMessageToFriend(summonerName,message){
+    let params=new URLSearchParams()
+    params.append('summonerName',summonerName)
+    params.append('message',message)
+    return await postData(`/lol-game-client-chat/v1/instant-messages?${params.toString()}`)
+}
+
 
 /**
  * 下面是进入英雄选择阶段时可能用到的接口
@@ -203,9 +219,10 @@ async function champSelectGetSummonerInfo(slotid){
 }
 
 
+for(let i=0;i<100;i++){
+    await sendMessageToFriend('看破虚妄',`测试，这是第${i}条消息`)
+    await sleep(200)
+}
 
-console.log(await getData(`/lol-game-client-chat/v1/buddies`,))
-
-//console.log(await https.build('/lol-player-level-up/v1/level-up-notifications/{pluginName}').method("post").create()({pluginName:'嘻嘻'}))
 
 
