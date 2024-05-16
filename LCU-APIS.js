@@ -17,6 +17,9 @@ const {
 
 //'/lol-simple-dialog-messages/v1/messages' 这个接口可以有客户端弹窗，但是似乎无法显示文本
 ///lol-summoner/v1/check-name-availability/${name} 这个接口有问题，什么名字都返回false
+// /lol-champ-select/v1/pin-drop-notification   这个接口显示选人的时候的红蓝方，每个队友的选路等信息
+// /lol-champ-select/v1/session/bench/swap/777  可能是大乱斗选上面的英雄？还是和队友换？未测试,777是英雄ID
+
 
 /**
  * 一个简单的获取data的函数
@@ -115,6 +118,22 @@ async function sendToast(title,details,backgroundUrl='',iconUrl=''){
 })
 }
 
+/**
+ * 获取好友列表所有好友的信息,含puuid,summonerId,name,icon:int,等
+ * @returns {Promise<*>}
+ */
+async function getFriendsInfo(){
+    return await getData('/lol-chat/v1/friends')
+}
+
+/**
+ * 获取所有好友名字
+ * @returns {name}
+ */
+async function getFriendsNames(){
+    return await getData('/lol-chat/v1/friends/summoner-names')
+}
+
 
 /**
  * 下面是进入英雄选择阶段时可能用到的接口
@@ -124,5 +143,69 @@ async function sendToast(title,details,backgroundUrl='',iconUrl=''){
  *
  */
 
-let ids=encodeURIComponent('['+[summonerId]+']')
-console.log(await getData(`/lol-summoner/v2/summoners?ids=${encodeURIComponent(`[${summonerId}]`)}`,))
+
+/**
+ * 获取当前选中的英雄
+ * @returns championId 角色的ID，int
+ */
+async function getSelectedChampion(){
+    return getData('/lol-champ-select/v1/current-champion')
+}
+
+/**
+ * 获取选人表格中所有英雄的信息
+ * @returns {data} 所有英雄的信息
+ */
+async function getAllGridChampions() {
+    return getData('/lol-champ-select/v1/all-grid-champions')
+}
+
+/**
+ * 获取当前可以ban的所有英雄ID
+ * @returns [ids] 可以ban的英雄id
+ */
+async function getAllBannableChampionIds(){
+    return getData(`/lol-champ-select/v1/bannable-champion-ids`)
+}
+
+/**
+ * 获取当前可以选择的所有英雄ID
+ * @returns [ids] 可以pick的英雄id
+ */
+async function getAllpickableChampionIds(){
+    return getData(`/lol-champ-select/v1/pickable-champion-ids`)
+}
+
+/**
+ * 选人阶段可用，获取当前房间的session，信息很丰富，敌我ban了什么英雄。gameID,是否自定义房间等
+ * @returns {roomdata}
+ */
+async function getchampSelectSession(){
+    return getData(`/lol-champ-select/v1/session`,)
+}
+
+/**
+ * 锁定英雄后调用，返回该英雄的皮肤以及炫彩的详细信息
+ * @returns {data}
+ */
+async function getChampionSkinCarousel(){
+    return await getData(`/lol-champ-select/v1/skin-carousel-skins`,)
+
+}
+
+/**
+ * 选人阶段可用，data包含puuid,选择英雄的name,summonerId等信息
+ * @param slotid
+ * @returns {Promise<*>}
+ */
+async function champSelectGetSummonerInfo(slotid){
+    return await getData(`/lol-champ-select/v1/summoners/${slotid}`,)
+}
+
+
+
+console.log(await getData(`/lol-game-client-chat/v1/buddies`,))
+
+//console.log(await https.build('/lol-player-level-up/v1/level-up-notifications/{pluginName}').method("post").create()({pluginName:'嘻嘻'}))
+
+
