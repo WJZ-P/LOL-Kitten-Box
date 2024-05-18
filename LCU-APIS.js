@@ -15,13 +15,37 @@ const {
     puuid,//召唤师PUUID,string
 } = summonerInfo
 
+const friendsInfo=await getFriendsInfo()
+
+const the5v5LobbyConfig = {
+    'customGameLobby': {
+        'configuration': {
+            'gameMode': 'PRACTICETOOL',
+            'gameMutator': '',
+            'gameServerRegion': '',
+            "gameTypeConfig": {//没用的好像
+                "duplicatePick": true,
+                "mainPickTimerDuration": 10,
+            },
+            'mapId': 11,
+            'mutators': {'id': 1},
+            'spectatorPolicy': 'AllAllowed',
+            'teamSize': 5,
+
+        },
+        'lobbyName': '5V5训练模式',
+        'lobbyPassword': '',
+    },
+    'isCustom': true
+}
+
 //'/lol-simple-dialog-messages/v1/messages' 这个接口可以有客户端弹窗，但是似乎无法显示文本
 ///lol-summoner/v1/check-name-availability/${name} 这个接口有问题，什么名字都返回false
 // /lol-champ-select/v1/pin-drop-notification   这个接口显示选人的时候的红蓝方，每个队友的选路等信息
 // /lol-champ-select/v1/session/bench/swap/777  可能是大乱斗选上面的英雄？还是和队友换？未测试,777是英雄ID
 
 //睡眠函数
-function sleep(ms){
+function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -83,11 +107,10 @@ async function getSummonerRegalia(args = []) {
  * @param id 为int数组，内容为summonerId
  * @returns infos 召唤师基本信息数组
  */
-async function getSummonerInfos(id){
-    let encodedIds=encodeURIComponent(`[${id}]`)
+async function getSummonerInfos(id) {
+    let encodedIds = encodeURIComponent(`[${id}]`)
     return await getData(`/lol-summoner/v2/summoners?ids=${id}`)
 }
-
 
 
 /**
@@ -107,26 +130,26 @@ async function getSummonerInfos(id){
  * @param iconUrl icon图片，似乎没有作用
  * @returns data 为API返回的数据json
  */
-async function sendToast(title,details,backgroundUrl='',iconUrl=''){
-    return postData('/player-notifications/v1/notifications',{
-    detailKey: "pre_translated_details",
-    titleKey: "pre_translated_title",
-    data: {
-        title: title,//标题
-        details: details//内容
-    },
-    backgroundUrl: backgroundUrl,
-    iconUrl: iconUrl,
-    dismissible: false,
-    state: "toast"//只能写这个，写别的似乎不会显示
-})
+async function sendToast(title, details, backgroundUrl = '', iconUrl = '') {
+    return postData('/player-notifications/v1/notifications', {
+        detailKey: "pre_translated_details",
+        titleKey: "pre_translated_title",
+        data: {
+            title: title,//标题
+            details: details//内容
+        },
+        backgroundUrl: backgroundUrl,
+        iconUrl: iconUrl,
+        dismissible: false,
+        state: "toast"//只能写这个，写别的似乎不会显示
+    })
 }
 
 /**
  * 获取好友列表所有好友的信息,含puuid,summonerId,name,icon:int,等
  * @returns {Promise<*>}
  */
-async function getFriendsInfo(){
+async function getFriendsInfo() {
     return await getData('/lol-chat/v1/friends')
 }
 
@@ -134,7 +157,7 @@ async function getFriendsInfo(){
  * 获取所有好友名字
  * @returns {name}
  */
-async function getFriendsNames(){
+async function getFriendsNames() {
     return await getData('/lol-chat/v1/friends/summoner-names')
 }
 
@@ -143,10 +166,10 @@ async function getFriendsNames(){
  * @param summonerName 召唤师名
  * @param message       发送的信息内容
  */
-async function sendMessageToFriend(summonerName,message){
-    let params=new URLSearchParams()
-    params.append('summonerName',summonerName)
-    params.append('message',message)
+async function sendMessageToFriend(summonerName, message) {
+    let params = new URLSearchParams()
+    params.append('summonerName', summonerName)
+    params.append('message', message)
     return await postData(`/lol-game-client-chat/v1/instant-messages?${params.toString()}`)
 }
 
@@ -164,7 +187,7 @@ async function sendMessageToFriend(summonerName,message){
  * 获取当前选中的英雄
  * @returns championId 角色的ID，int
  */
-async function getSelectedChampion(){
+async function getSelectedChampion() {
     return getData('/lol-champ-select/v1/current-champion')
 }
 
@@ -180,7 +203,7 @@ async function getAllGridChampions() {
  * 获取当前可以ban的所有英雄ID
  * @returns [ids] 可以ban的英雄id
  */
-async function getAllBannableChampionIds(){
+async function getAllBannableChampionIds() {
     return getData(`/lol-champ-select/v1/bannable-champion-ids`)
 }
 
@@ -188,7 +211,7 @@ async function getAllBannableChampionIds(){
  * 获取当前可以选择的所有英雄ID
  * @returns [ids] 可以pick的英雄id
  */
-async function getAllpickableChampionIds(){
+async function getAllpickableChampionIds() {
     return getData(`/lol-champ-select/v1/pickable-champion-ids`)
 }
 
@@ -196,7 +219,7 @@ async function getAllpickableChampionIds(){
  * 选人阶段可用，获取当前房间的session，信息很丰富，敌我ban了什么英雄。gameID,是否自定义房间等
  * @returns {roomdata}
  */
-async function getchampSelectSession(){
+async function getchampSelectSession() {
     return getData(`/lol-champ-select/v1/session`,)
 }
 
@@ -204,7 +227,7 @@ async function getchampSelectSession(){
  * 锁定英雄后调用，返回该英雄的皮肤以及炫彩的详细信息
  * @returns {data}
  */
-async function getChampionSkinCarousel(){
+async function getChampionSkinCarousel() {
     return await getData(`/lol-champ-select/v1/skin-carousel-skins`,)
 
 }
@@ -214,15 +237,72 @@ async function getChampionSkinCarousel(){
  * @param slotid
  * @returns {Promise<*>}
  */
-async function champSelectGetSummonerInfo(slotid){
+async function champSelectGetSummonerInfo(slotid) {
     return await getData(`/lol-champ-select/v1/summoners/${slotid}`,)
 }
 
+/**
+ * 锁定英雄接口，需要先选择英雄
+ */
+async function selectChampion() {
+    return await postData(`/lol-champ-select/v1/session/actions/${1}/select`,)
+}
 
-for(let i=0;i<100;i++){
-    await sendMessageToFriend('看破虚妄',`测试，这是第${i}条消息`)
-    await sleep(200)
+//console.log(await getData(`/lol-end-of-game/v1/eog-stats-block`,))    应该是结束游戏之后的数据
+
+/**
+ * 创建房间
+ */
+async function create5V5Lobby() {
+    return await postData(`/lol-lobby/v2/lobby`, the5v5LobbyConfig)
+}
+
+/**
+ * 获取自己的历史对局信息
+ * @returns {Promise<LcuComponents["schemas"]["LolMatchHistoryMatchHistoryGame"][]>}
+ */
+async function getMatchHistoryMyself(){
+    return (await getData(`/lol-match-history/v1/products/lol/current-summoner/matches`,)).games.games
+}
+
+/**
+ * 获取其他玩家的对局记录，根据puuid，返回的是数组,每一个的.participantIdentities属性有他的对局详细信息
+ * @param puuid 玩家的puuid
+ * @returns {Promise<LcuComponents["schemas"]["LolMatchHistoryMatchHistoryGame"][]>}
+ */
+async function getMatchHistoryOthers(puuid){
+    return (await getData(`/lol-match-history/v1/products/lol/${puuid}/matches`)).games.games
+}
+
+/**
+ * 查询所有符文的详细信息
+ */
+async function getPerksInfo(){
+    return await getData(`/lol-perks/v1/perks`,)
+}
+
+/**
+ * 对局相关接口
+ *
+ *
+ */
+
+/**
+ * 开始寻找对局
+ * @returns undefined
+ */
+async function startMarch(){
+    return await postData(`/lol-lobby/v2/lobby/matchmaking/search`)
+}
+
+/**
+ * 寻找对局中使用，自动接受对局
+ * @returns undefined
+ */
+async function matchAccept(){
+    return  await postData(`/lol-matchmaking/v1/ready-check/decline`)
 }
 
 
-
+console.log((await postData(`
+/lol-lobby/v1/parties/active`,[0],'put')))
