@@ -304,5 +304,4 @@ async function matchAccept(){
 }
 
 
-console.log((await postData(`
-/lol-lobby/v1/parties/active`,[0],'put')))
+console.log(JSON.stringify((await postData(`/lol-lobby/v2/eligibility/party`,[])),' ',4))
