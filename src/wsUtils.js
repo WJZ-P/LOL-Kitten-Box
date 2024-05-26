@@ -30,5 +30,7 @@ async function autoStartMatch() {
     })
 }
 
+
+
 await autoAcceptMatch()
 await autoStartMatch()
