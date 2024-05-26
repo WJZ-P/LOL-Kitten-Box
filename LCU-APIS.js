@@ -43,7 +43,8 @@ const the5v5LobbyConfig = {
 ///lol-summoner/v1/check-name-availability/${name} 这个接口有问题，什么名字都返回false
 // /lol-champ-select/v1/pin-drop-notification   这个接口显示选人的时候的红蓝方，每个队友的选路等信息
 // /lol-champ-select/v1/session/bench/swap/777  可能是大乱斗选上面的英雄？还是和队友换？未测试,777是英雄ID
-
+// /lol-gameflow/v1/watch/launch                观战的接口
+// /lol-game-queues/v1/queues                   获取LOL所有游戏模式的信息
 //睡眠函数
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -121,6 +122,21 @@ export async function getSummonerInfos(id) {
  *
  *
  */
+
+/**
+ * 根据地图id获取地图信息
+ * @param id    地图ID
+ */
+export async function getMapInfo(id){
+    return await getData(`/lol-maps/v1/map/${id}`)
+}
+
+/**
+ * 获取所有地图信息
+ */
+export async function getAllMapInfo(){
+    return await getData(`/lol-maps/v1/maps`)
+}
 
 
 /**
@@ -249,8 +265,6 @@ export async function selectChampion() {
     return await postData(`/lol-champ-select/v1/session/actions/${1}/select`,)
 }
 
-//console.log(await getData(`/lol-end-of-game/v1/eog-stats-block`,))    应该是结束游戏之后的数据
-
 /**
  * 创建房间
  */
@@ -267,7 +281,7 @@ export async function getMatchHistoryMyself() {
 }
 
 /**
- * 获取其他玩家的对局记录，根据puuid，返回的是数组,每一个的.participantIdentities属性有他的对局详细信息
+ * 获取其他玩家的历史对局记录，根据puuid，返回的是数组,每一个的.participantIdentities属性有他的对局详细信息
  * @param puuid 玩家的puuid
  * @returns {Promise<LcuComponents["schemas"]["LolMatchHistoryMatchHistoryGame"][]>}
  */
@@ -293,7 +307,9 @@ export async function getPerksInfo() {
  * @returns undefined
  */
 export async function startMarch() {
-    return await postData(`/lol-lobby/v2/lobby/matchmaking/search`)
+    try {console.log('自动寻找对局中！')
+        return await postData(`/lol-lobby/v2/lobby/matchmaking/search`)}
+    catch (error){console.log(`因退出房间，自动开始寻找对局失败`)}
 }
 
 /**
@@ -301,7 +317,14 @@ export async function startMarch() {
  * @returns undefined
  */
 export async function matchAccept() {
-    return await postData(`/lol-matchmaking/v1/ready-check/decline`)
+    try {
+        let temp_data=await postData(`/lol-matchmaking/v1/ready-check/accept`)
+        console.log(`正在尝试自动接受对局`)
+        return temp_data
+    } catch (error) {
+        console.log('因取消排队，自动接受对局失败')
+    }
+
 }
 
 
@@ -314,16 +337,13 @@ export async function setChampionChroma(skinid) {
     return await postData(`/lol-champ-select/v1/session/my-selection`, {selectedSkinId: skinid}, 'patch')
 }
 
-ws.subscribe('OnJsonApiEvent_lol-champ-select_v1_session', (data) => {
-    console.log(data)
-})
+/**
+ * 自动再开一局
+ * @returns {Promise<*>}
+ */
+export async function playAgain() {
+    return await postData(`/lol-lobby/v2/play-again`)
+}
 
-
-// let data_to_use=await getData(`/lol-champ-select/v1/session/`)
-//
-// let chat_room_id=data_to_use.chatDetails.mucJwtDto.channelClaim.split('-')[0]//房间编号
-// console.log(data_to_use)
-//
-// console.log(await setChampionChroma(235014))
-
-
+//console.log(await getMatchHistoryOthers(puuid))
+console.log(await getMapInfo(30))
