@@ -2,6 +2,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "dayjs": "^1.11.11",
+    "electron": "^30.0.9",
     "hexgate": "^0.14.8",
     "sudo-js": "^1.0.2",
     "sudo-prompt": "^9.2.1"
@@ -10,10 +11,10 @@
   "name": "lol-kitten-box",
   "description": "英雄联盟Kitten小助手",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "electron ."
   },
   "author": "WJZ_P",
   "license": "ISC"
