@@ -22,4 +22,10 @@ function App() {
   );
 }
 
+export function MyButton(){
+    return (
+        <button>Click me!</button>
+    )
+}
+
 export default App;
