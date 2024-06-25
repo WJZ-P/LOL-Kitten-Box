@@ -6,8 +6,8 @@ const mode = process.argv[2];
 //把创建窗口独立成一个函数
 function createWindow() {
     let mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1000,
+        height: 700,
         webPreferences: {
             nodeIntegration: true//允许在渲染进程中使用node
         }
