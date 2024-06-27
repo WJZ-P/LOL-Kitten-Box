@@ -1,11 +1,12 @@
-/**
- * The preload script runs before `index.html` is loaded
- * in the renderer. It has access to web APIs as well as
- * Electron's renderer process modules and some polyfilled
- * Node.js functions.
- *
- * https://www.electronjs.org/docs/latest/tutorial/sandbox
- */
+const {contextBridge,ipcRenderer} = require("electron")
+
+//定义一些通信方法
+contextBridge.exposeInMainWorld('appWindowAPI',{
+  windowMinimize:()=>{ipcRenderer.send('minimize')},
+  windowMaximize:()=>{ipcRenderer.send('maximize')}
+})
+
+
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {
     const element = document.getElementById(selector)
