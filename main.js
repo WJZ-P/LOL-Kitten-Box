@@ -19,7 +19,7 @@ function createWindow() {
     })
 //判断是否是开发模式
     if (mode === 'dev') {//这里通过启动脚本来判断是否是开发者模式，主要看有没有dev参数
-        mainWindow.loadURL("http://localhost:3000/")//开发者模式就载入3000端口的react
+        mainWindow.loadURL("http://localhost:3633/")//开发者模式就载入3000端口的react
     } else {
         mainWindow.loadURL(url.format({//否则就载入本地的html,需要打包后才能用，不打包没有build文件夹
             pathname: path.join(__dirname, './build/index.html'),
