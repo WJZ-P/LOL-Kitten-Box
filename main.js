@@ -27,6 +27,7 @@ function createWindow() {
             slashes: true
         }))
     }
+    //mainWindow.setMenu(null);//隐藏菜单栏
 }
 
 app.on("ready", createWindow)//监听app打开事件，直接调用创建窗口函数

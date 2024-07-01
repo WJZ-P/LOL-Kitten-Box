@@ -1,23 +1,31 @@
-import logo from './logo.png';
+import logo from './assets/logo.png';
 import './App.css';
-import {useState} from "react";
-import {
-    Button, FormControlLabel, FormGroup, ListItem, ListItemIcon, ListItemText, ListSubheader, Switch
-} from "@material-ui/core";
+import {useEffect, useState} from "react";
 import Stack from '@mui/material/Stack';
-import {alpha, Avatar, Box, createTheme, getContrastRatio, ThemeProvider} from "@mui/material";
-import {AccessibleForward} from "@material-ui/icons";
+import {
+    alpha,
+    Avatar,
+    Backdrop,
+    Box, Button,
+    CircularProgress,
+    createTheme, FormControlLabel,
+    getContrastRatio, Portal, Switch,
+    ThemeProvider,
+    Typography
+} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import {AccessibleForward, ElderlyWoman} from "@mui/icons-material";
+import MyDrawer from './components/MyDrawer';
 const green = '#00ff43'//定义绿色
-
+const blue = '#66ccff'//定义蓝色
 let theme = createTheme({
     palette: {
         primary: {
-            main: green,
-            light: alpha(green, 0.5),
-            dark: alpha(green, 0.9),
-            contrastText: getContrastRatio(green, '#fff') >= 4.5 ? '#000' : '#fff'
+            main: blue,
+            light: alpha(blue, 0.5),
+            dark: alpha(blue, 0.9),
+            contrastText: getContrastRatio(blue, '#fff') >= 4.5 ? '#000' : '#fff'
             //上面的方法是通过对比度来判断文字颜色的，如果大于4.5就用黑色，否则用白色
         }
     }
@@ -28,6 +36,8 @@ export default function App() {
     return <ThemeProvider theme={theme}>
         <div className="App">
             <header className="App-header">
+                {/*这是我的抽屉组件*/}
+                <MyDrawer/>
                 <img src={logo} className="App-logo" alt="logo"/>
                 <p>
                     Edit <code>src/App.js</code> and save to reload.
@@ -45,15 +55,16 @@ export default function App() {
                     {/*很奇怪，stack里面改按钮大小，全部按钮大小是根据最大的来}*/}
                     <Box sx={{'& button': {m: 1}}}>
                         {/*所以引入了box*/}
-                        <Button variant='text' color="primary" size='small' startIcon={<AccessibleForward />}>
+                        <Button variant='text' color="primary" size='small' startIcon={<AccessibleForward/>}>
                             按钮1
                         </Button>
-                        <Button variant="contained" color="primary" size='midium' endIcon={<SendIcon />}>
+                        <Button variant="contained" color="primary" size='midium' endIcon={<SendIcon/>}>
                             按钮2
                         </Button>
                         <Button variant="outlined" color="primary" size={'large'} endIcon={<FavoriteBorderIcon/>}>
                             按钮3
                         </Button>
+                        <SimpleBackDropButton/>
                     </Box>
                 </Stack>
                 <FormControlLabel
@@ -63,8 +74,12 @@ export default function App() {
                     labelPlacement="start"
                     onChange={handleSwitch}
                 />
-                <Avatar alt={'WJZ_P'} src={'./public/wjz_p.png'}/>
-                <h1>By WJZ_P</h1>
+                <Box display="flex" alignItems="center"
+                     sx={{p: 2, border: 5, borderColor: 'primary.light', bgcolor: 'primary'}}>
+                    <Avatar alt="WJZ_P" src={process.env.PUBLIC_URL + '/wjz_p.jpg'}
+                            sx={{mr: 2, height: 60, width: 60}}/>
+                    <Typography variant="h5" component="h1">By WJZ_P</Typography>
+                </Box>
             </header>
             <Tic_tac_toe/>
 
@@ -82,8 +97,36 @@ function handleSwitch(event) {
     window.appWindowAPI.windowMaximize()
 }
 
+function SimpleBackDropButton() {//一个简单的背景遮罩层
+    const [open, setOpen] = useState(false)
+    const handleClose = () => {
+        setOpen(false)
+    }
+    const handleOpen = () => {
+        setOpen(true)
+    }
+    return (
+        <>
+            {/*这里portal选择整个html元素为挂载节点，这样遮罩层保证盖住其他元素*/}
+            <Button variant='contained' onClick={handleOpen} color={'primary'}>
+                打开遮罩层</Button>
+            <Portal container={() => document.documentElement}>
+                <Backdrop open={open} onClick={handleClose} >
+                    <Box display="flex" alignItems="center" color={"white"}>
+                        <CircularProgress color="inherit"/> <Typography color="white" ml={2} fontSize={25}>
+                        飞速加载中(｡◕ˇ∀ˇ◕）...
+                    </Typography></Box>
+                </Backdrop>
+            </Portal>
+        </>)
+}
+
+
+
+
+
 export function MyButton() {
-    const [count, setCount] = useState(0)
+    const [count, setCount] = useCacheState('test', 0)
     return (<button
         style={{
             backgroundColor: '#78d7d0', /* Green */
@@ -182,4 +225,25 @@ function Tic_tac_toe() {
 
 function Square({value, onSquareClick}) {
     return (<Button className="square" onClick={onSquareClick}>{value}</Button>)
+}
+
+export function useCacheState(key, defaultValue) {
+    const storage = window.localStorage
+
+    function getCachedValue() {
+        let cachedValue = storage.getItem(key);
+        return cachedValue && JSON.parse(cachedValue).value
+    }
+
+    const [value, setValue] = useState(getCachedValue() ?? defaultValue)
+
+
+    useEffect(() => {
+        storage.setItem(key, JSON.stringify({
+            value
+        }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [value]);
+
+    return [value, setValue]
 }
