@@ -2,7 +2,9 @@ import {ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/materia
 import {InfoOutlined, PersonSearch, PlayArrow} from "@mui/icons-material";
 import React from "react";
 
-export default function ButtonMain() {
+
+const text='主要功能'
+export default function ButtonMain(open) {
     return (<ListItem key={text} disablePadding sx={{display: 'block'}}>
         <ListItemButton>
             <ListItemIcon
@@ -13,7 +15,7 @@ export default function ButtonMain() {
 
                 <PlayArrow sx={{display: 'flex'}}/>
             </ListItemIcon>
-            <ListItemText primary={'主要功能'} sx={{opacity: open ? 1 : 0}}/>
+            <ListItemText primary={text} sx={{opacity: open ? 1 : 0}}/>
         </ListItemButton>
     </ListItem>)
 }
