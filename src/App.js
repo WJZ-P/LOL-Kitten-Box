@@ -4,7 +4,7 @@ import {alpha, createTheme, getContrastRatio, ThemeProvider} from "@mui/material
 import Home from "./routes/home";
 import React from "react";
 import MyDrawer from "./components/MyDrawer";
-
+import MainFunctionPage from "./routes/MainFunctionPage";
 const green = '#00ff43'//定义绿色
 const blue = '#66ccff'//定义蓝色
 let theme = createTheme({
@@ -20,17 +20,17 @@ let theme = createTheme({
 })
 
 const router = createHashRouter([{
-    path: "/", element: <MyDrawer/>,
-    children:[{
-        path:'/',
-        element: <Home/>
+    path: "/", element: <MyDrawer/>, children: [{
+        path: '/', element: <Home/>
+    }, {
+        path: '/MainFunctionPage', element: <MainFunctionPage/>
     }]
-},]);
+}]);
 
 export default function App() {
     return (<ThemeProvider theme={theme}>
-            <RouterProvider router={router}/>
-        </ThemeProvider>)
+        <RouterProvider router={router}/>
+    </ThemeProvider>)
 }
 
 

@@ -1,0 +1,4 @@
+.CustomButton {
+    display: flex;
+    justify-content: space-between;
+}

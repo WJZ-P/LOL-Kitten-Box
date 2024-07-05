@@ -8,13 +8,12 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {AccessibleForward} from "@mui/icons-material";
-import MyDrawer from '../components/MyDrawer';
 
 export default function Home() {
-    return (<div className="App">
+    return (<div className="Page Home">
             <header className="App-header">
                 {/*这是我的抽屉组件*/}
-                {/*<MyDrawer/>*/}
+                {/*<MyDrawer/>这里注释掉是因为已经通过route渲染了*/}
                 <img src={logo} className="App-logo" alt="logo"/>
                 <p>
                     Edit <code>src/App.js</code> and save to reload.
