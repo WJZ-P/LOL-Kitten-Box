@@ -306,7 +306,7 @@ export async function getPerksInfo() {
  * 开始寻找对局
  * @returns undefined
  */
-export async function startMarch() {
+export async function matchStart() {
     try {console.log('自动寻找对局中！')
         return await postData(`/lol-lobby/v2/lobby/matchmaking/search`)}
     catch (error){console.log(`因退出房间，自动开始寻找对局失败`)}

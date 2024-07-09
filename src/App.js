@@ -3,7 +3,7 @@ import {createBrowserRouter, createHashRouter, RouterProvider} from "react-route
 import {alpha, createTheme, getContrastRatio, ThemeProvider} from "@mui/material";
 import Home from "./routes/home";
 import React from "react";
-import MyDrawer from "./components/MyDrawer";
+import MyDrawer from "./components/DrawerComponent/MyDrawer";
 import MainFunctionPage from "./routes/MainFunctionPage";
 const green = '#00ff43'//定义绿色
 const blue = '#66ccff'//定义蓝色

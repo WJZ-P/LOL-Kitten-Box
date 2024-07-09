@@ -1,10 +1,16 @@
 import React from 'react'
 import '../App.css'
-import CardWithButton from "../components/CardWithButton";
+import {Switch} from "@mui/material";
+import Stack from "@mui/material/Stack";
+import CardWithSwitch from "../components/Card/CardWithSwitch";
 
 export default function MainFunctionPage() {
-
-    return (<div className="App Home Page">
-        <CardWithButton/>
+    return (<div className="App MainFunction Page">
+        <Stack spacing={1} sx={{padding:'5px 10px'}}>
+            <CardWithSwitch Switch={<Switch/>} text="嘻嘻哈哈,哇嘎哇嘎"/>
+            <CardWithSwitch Switch={<Switch/>} text="嘻嘻哈哈,我日你妈"/>
+            <CardWithSwitch Switch={<Switch/>} text="打开开关以杀死96"/>
+        </Stack>
     </div>)
 }
+

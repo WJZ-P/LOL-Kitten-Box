@@ -12,6 +12,8 @@
     "@testing-library/user-event": "^13.5.0",
     "clsx": "^2.1.1",
     "electron": "^30.1.0",
+    "electron-store": "^10.0.0",
+    "hexgate": "^0.14.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.0",

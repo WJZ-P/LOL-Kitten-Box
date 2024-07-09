@@ -6,6 +6,11 @@ contextBridge.exposeInMainWorld('appWindowAPI',{
   windowMaximize:()=>{ipcRenderer.send('maximize')}
 })
 
+//下面定义一些LCUAPI的方法
+contextBridge.exposeInMainWorld('LCUAPI',{
+  matchAccept:()=>{ipcRenderer.send('LCU-matchAccept')}
+})
+
 
 window.addEventListener('DOMContentLoaded', () => {
   const replaceText = (selector, text) => {

@@ -1,6 +1,6 @@
 import * as LcuApi from './LCU-APIS.js'
 import {auth, Hexgate as HttpsClient, LcuClient as WsClient, poll} from "hexgate";
-import {matchAccept, startMarch} from "./LCU-APIS.js";
+import {matchAccept, matchStart} from "./LCU-APIS.js";
 
 const credentials = await poll(auth)//获取鉴权，必须以管理员模式启动，不然会卡死
 //console.log(credentials)//打印获取到的内容
@@ -26,7 +26,7 @@ async function autoAcceptMatch() {
 
 async function autoStartMatch() {
     ws.subscribe('OnJsonApiEvent_lol-lobby_v2_party-active', async (data) => {
-        if (isautoStartMatch) await startMarch()
+        if (isautoStartMatch) await matchStart()
     })
 }
 

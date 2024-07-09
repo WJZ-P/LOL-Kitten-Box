@@ -13,7 +13,7 @@ function createWindow() {
         width: 1000,
         height: 700,
         webPreferences: {
-            nodeIntegration: true,//允许在渲染进程中使用node
+            nodeIntegration: false,//允许在渲染进程中使用node
             preload: path.join(__dirname,'preload.js')//启用预加载脚本
         }
     })
