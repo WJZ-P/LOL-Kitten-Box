@@ -346,4 +346,4 @@ export async function playAgain() {
 }
 
 //console.log(await getMatchHistoryOthers(puuid))
-console.log(await getMapInfo(30))
+//console.log(await getMapInfo(30))

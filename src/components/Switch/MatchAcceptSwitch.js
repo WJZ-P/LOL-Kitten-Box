@@ -1,13 +1,16 @@
 import {Switch} from "@mui/material";
-import {Warning} from "@mui/icons-material";
+import usePersistedState from "../../Hooks/usePersistedState.js";
 
 export default function MatchAcceptSwitch() {
-    return (<Switch onChange={e => {
+    const [state, setState] = usePersistedState('Button-LCU-MatchAccept', false)
+    const handleChange = (e) => {
+        setState(e.target.checked);
         if (e.target.checked) {
-            console.log("Match Start")
+            window.LCUAPI.matchAccept(); // 发送开启自动匹配请求
         } else {
-            console.log("Match Stop")
+            window.LCUAPI.cancleMatchAccept(); // 发送取消自动匹配请求
         }
-    }
-    }/>)
+    };
+    return (<Switch onChange={handleChange} checked={state}/>)
 }
+

@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import ReactDOM from 'react-dom/client';
 import '../../index.css';
 import {
     Box,
@@ -14,7 +13,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import {InfoOutlined, PersonSearch, PlayArrow} from "@mui/icons-material";
 import MuiDrawer from '@mui/material/Drawer';
-import ButtonMain from "./ButtonMain";
+import ButtonMain from "./ButtonMain.js";
 import {Outlet} from "react-router-dom";
 
 const drawerWidth = 180;

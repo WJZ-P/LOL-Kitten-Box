@@ -19,7 +19,7 @@ export default function ButtonMain(open) {
     const handleMouseOut = () => {
         setIsHovered(false);
     };
-    return (<div className={'Button'}>
+    return (<div className={'Drawer Button'}>
         <Link to="/MainFunctionPage">
             <ListItem key={text} disablePadding sx={{
                 backgroundColor: isHovered ? 'primary.light' : 'background.paper',

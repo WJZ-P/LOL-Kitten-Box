@@ -1,4 +1,3 @@
-import * as LcuApi from './LCU-APIS.js'
 import {auth, Hexgate as HttpsClient, LcuClient as WsClient, poll} from "hexgate";
 import {matchAccept, matchStart} from "./LCU-APIS.js";
 
@@ -8,29 +7,28 @@ const credentials = await poll(auth)//获取鉴权，必须以管理员模式启
 const https = new HttpsClient(credentials)//构建http链接
 const ws = new WsClient(credentials)//构建ws链接
 
-//下面定义一些bool类型的变量，判断是否需要开启对应功能
-let isAutoAcceptMatch = true
-let isautoStartMatch = true
-
 
 /**
  * 自动接受对局
  * @returns {Promise<void>}
  */
-async function autoAcceptMatch() {
+export async function autoAcceptMatch() {
     ws.subscribe('OnJsonApiEvent_lol-matchmaking_v1_ready-check', async (data) => {
-        if (isAutoAcceptMatch) await matchAccept();
+        await matchAccept();
     })
 }
 
+export async function unAutoAcceptMatch() {
+    ws.unsubscribe('OnJsonApiEvent_lol-matchmaking_v1_ready-check')
+}
 
-async function autoStartMatch() {
+
+export async function autoStartMatch() {
     ws.subscribe('OnJsonApiEvent_lol-lobby_v2_party-active', async (data) => {
-        if (isautoStartMatch) await matchStart()
+        await matchStart()
     })
 }
 
-
-
-await autoAcceptMatch()
-await autoStartMatch()
+export async function unAutoStartMatch() {
+    ws.unsubscribe('OnJsonApiEvent_lol-lobby_v2_party-active')
+}

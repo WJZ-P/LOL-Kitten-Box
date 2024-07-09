@@ -1,10 +1,10 @@
 import './App.css';
 import {createBrowserRouter, createHashRouter, RouterProvider} from "react-router-dom";
 import {alpha, createTheme, getContrastRatio, ThemeProvider} from "@mui/material";
-import Home from "./routes/home";
+import Home from "./routes/home.js";
 import React from "react";
-import MyDrawer from "./components/DrawerComponent/MyDrawer";
-import MainFunctionPage from "./routes/MainFunctionPage";
+import MyDrawer from "./components/DrawerComponent/MyDrawer.js";
+import MainFunctionPage from "./routes/MainFunctionPage.js";
 const green = '#00ff43'//定义绿色
 const blue = '#66ccff'//定义蓝色
 let theme = createTheme({

@@ -17,10 +17,6 @@ export default function CardWithSwitch({Switch, text}) {
         setIsHovered(false);
     };
 
-    useEffect(() => {
-        const switchState=
-        console.log('CardWithSwitch rendered')
-    }, [])
     return (
         <Card onMouseOver={handleMouseOver}
               onMouseOut={handleMouseOut}
