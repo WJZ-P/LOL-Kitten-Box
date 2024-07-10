@@ -1,10 +1,11 @@
-import {app, BrowserWindow, ipcMain} from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'node:path';
 import url from 'url';
-import {autoAcceptMatch, unAutoAcceptMatch} from './backend/wsUtils.js'
+import { autoAcceptMatch, unAutoAcceptMatch } from './backend/wsUtils.mjs';
 // 获取在 package.json 中的命令脚本传入的参数，来判断是开发还是生产环境
 const mode = process.argv[2];
-
+const __dirname = import.meta.dirname;
+app.setPath('userData', path.join(__dirname, 'data'));//设置用户数据目录
 let mainWindow;
 
 //把创建窗口独立成一个函数
@@ -47,9 +48,11 @@ ipcMain.on('maximize', event => {
 
 //开启自动匹配功能
 ipcMain.on('LCU-matchAccept', async event => {
+    console.log('开启自动匹配功能')
     await autoAcceptMatch()
 })
 //关闭自动匹配功能
 ipcMain.on('LCU-cancleMatchAccept', async event => {
+    console.log('关闭自动匹配功能')
     await unAutoAcceptMatch()
 })

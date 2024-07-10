@@ -1,5 +1,4 @@
-import {contextBridge,ipcRenderer} from "electron"
-
+const {contextBridge,ipcRenderer}=require("electron")
 //定义一些通信方法
 contextBridge.exposeInMainWorld('appWindowAPI',{
   windowMinimize:()=>{ipcRenderer.send('minimize')},
@@ -8,13 +7,6 @@ contextBridge.exposeInMainWorld('appWindowAPI',{
 
 //定义一些工具方法
 contextBridge.exposeInMainWorld('utils',{
-  // usePersistedState:()=>{
-  //   const {usePersistedState} = require("/src/Hooks/usePersistedState.js")
-  //   return usePersistedState
-  // },
-  writeFile: (filename, text, callback) => {
-        fs.writeFile(filename, text, callback);
-    }
 })
 
 //下面定义一些LCUAPI的方法

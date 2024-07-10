@@ -10,7 +10,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {AccessibleForward} from "@mui/icons-material";
 
 export default function Home() {
-    return (<div className="Page Home">
+    return (<div className="App Page Home">
             <header className="App-header">
                 {/*这是我的抽屉组件*/}
                 {/*<MyDrawer/>这里注释掉是因为已经通过route渲染了*/}
@@ -84,7 +84,7 @@ function SimpleBackDropButton() {//一个简单的背景遮罩层
         {/*这里portal选择整个html元素为挂载节点，这样遮罩层保证盖住其他元素*/}
         <Button variant='contained' onClick={handleOpen} color={'primary'}>
             打开遮罩层</Button>
-        <Portal container={() => document.documentElement}>
+        <Portal container={() => document.body}>
             <Backdrop open={open} onClick={handleClose}>
                 <Box display="flex" alignItems="center" color={"white"}>
                     <CircularProgress color="inherit"/> <Typography color="white" ml={2} fontSize={25}>

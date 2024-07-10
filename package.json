@@ -25,10 +25,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron-dev": "electron . dev",
+    "electron-dev": "chcp 65001 && electron . dev",
     "electron": "electron ."
   },
-  "main": "main.js",
+  "main": "main.mjs",
   "homepage": ".",
   "eslintConfig": {
     "extends": [

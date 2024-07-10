@@ -1,8 +1,15 @@
 import {Hexgate as HttpsClient, LcuClient as WsClient} from "hexgate";
 import {auth, poll} from "hexgate";
 
-const credentials = await poll(auth)//获取鉴权，必须以管理员模式启动，不然会卡死
+async function initial() {
+    console.log("初始化中...正在尝试获取鉴权")
+    let result = await poll(auth)//获取鉴权，必须以管理员模式启动，不然会卡死
+    console.log('鉴权获取成功')
+    return result
 //console.log(credentials)//打印获取到的内容
+}
+
+const credentials = await initial()
 
 const https = new HttpsClient(credentials)//构建http链接
 const ws = new WsClient(credentials)//构建ws链接
@@ -127,14 +134,14 @@ export async function getSummonerInfos(id) {
  * 根据地图id获取地图信息
  * @param id    地图ID
  */
-export async function getMapInfo(id){
+export async function getMapInfo(id) {
     return await getData(`/lol-maps/v1/map/${id}`)
 }
 
 /**
  * 获取所有地图信息
  */
-export async function getAllMapInfo(){
+export async function getAllMapInfo() {
     return await getData(`/lol-maps/v1/maps`)
 }
 
@@ -307,9 +314,12 @@ export async function getPerksInfo() {
  * @returns undefined
  */
 export async function matchStart() {
-    try {console.log('自动寻找对局中！')
-        return await postData(`/lol-lobby/v2/lobby/matchmaking/search`)}
-    catch (error){console.log(`因退出房间，自动开始寻找对局失败`)}
+    try {
+        console.log('自动寻找对局中！')
+        return await postData(`/lol-lobby/v2/lobby/matchmaking/search`)
+    } catch (error) {
+        console.log(`因退出房间，自动开始寻找对局失败`)
+    }
 }
 
 /**
@@ -318,7 +328,7 @@ export async function matchStart() {
  */
 export async function matchAccept() {
     try {
-        let temp_data=await postData(`/lol-matchmaking/v1/ready-check/accept`)
+        let temp_data = await postData(`/lol-matchmaking/v1/ready-check/accept`)
         console.log(`正在尝试自动接受对局`)
         return temp_data
     } catch (error) {
