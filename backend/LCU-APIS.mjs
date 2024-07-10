@@ -334,7 +334,10 @@ export async function matchAccept() {
     } catch (error) {
         console.log('因取消排队，自动接受对局失败')
     }
+}
 
+export async function getGameflowPhase() {
+    return await getData('/lol-gameflow/v1/gameflow-phase')
 }
 
 

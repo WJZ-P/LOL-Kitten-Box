@@ -16,10 +16,12 @@ export async function autoAcceptMatch() {
     ws.subscribe('OnJsonApiEvent_lol-matchmaking_v1_ready-check', async (data) => {
         await matchAccept();
     })
+    console.log('wsUtils-开启自动接受对局功能')
 }
 
 export async function unAutoAcceptMatch() {
     ws.unsubscribe('OnJsonApiEvent_lol-matchmaking_v1_ready-check')
+    console.log('wsUtils-关闭自动接受对局功能')
 }
 
 
@@ -27,8 +29,10 @@ export async function autoStartMatch() {
     ws.subscribe('OnJsonApiEvent_lol-lobby_v2_party-active', async (data) => {
         await matchStart()
     })
+    console.log('wsUtils-开启自动开始对局功能')
 }
 
 export async function unAutoStartMatch() {
     ws.unsubscribe('OnJsonApiEvent_lol-lobby_v2_party-active')
+    console.log('wsUtils-关闭自动开始对局功能')
 }
