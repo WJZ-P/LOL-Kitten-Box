@@ -10,7 +10,6 @@ import {
 let championNameToBeSelect=undefined//设置初始时需要秒选的英雄
 export function setChampionName(name){//设置需要秒选的英雄
     championNameToBeSelect=name
-    console.log('设置需要秒选的英雄为',name)
 }
 
 const ACTIONS = {
