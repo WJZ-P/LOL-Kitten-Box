@@ -82,25 +82,6 @@ export default function MyDrawer() {
                 <Divider/>
                 <List>
                     <ButtonMain open={open}/>
-                    {['玩家查询', '主要功能', '帮助菜单'].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{display: 'block'}}>
-                            <ListItemButton>
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : -15,
-                                        ml: 'auto',
-                                        justifyContent: 'center',
-                                    }}
-                                >
-
-                                    {[<PersonSearch sx={{display: 'flex'}}/>, <PlayArrow sx={{display: 'flex'}}/>,
-                                        <InfoOutlined sx={{display: 'flex'}}/>][index]}
-                                </ListItemIcon>
-                                <ListItemText primary={text} sx={{opacity: open ? 1 : 0}}/>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
                 </List>
                 <Divider/>
 

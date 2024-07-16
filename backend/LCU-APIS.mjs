@@ -14,13 +14,28 @@ const credentials = await initial()
 const https = new HttpsClient(credentials)//构建http链接
 const ws = new WsClient(credentials)//构建ws链接
 
-const summonerInfo = await getSummonerInfo()//召唤师信息
+export const summonerInfo = await getSummonerInfo()//召唤师信息
 const {
     summonerId,//召唤师ID,int
     accountId,//召唤师账户ID,int
     displayName,//召唤师名字,string,一般和gameName和internalName是一样的
     puuid,//召唤师PUUID,string
 } = summonerInfo
+
+export const championsInfo = (await getData(`/lol-champions/v1/inventories/${summonerId}/champions-minimal`)).map(
+    (singaleChampionInfo) => ({
+        title: singaleChampionInfo.name,
+        id: singaleChampionInfo.id,
+        name: singaleChampionInfo.title
+    })
+)
+
+/*
+根据名字或者称号查找英雄ID
+ */
+export function findChampionID(name) {
+    return championsInfo.find(champion => (champion.name === name || champion.title === name))?.id
+}
 
 const friendsInfo = await getFriendsInfo()
 
@@ -74,7 +89,13 @@ export async function getData(path, args = [], method = 'get') {
 }
 
 export async function postData(path, args = [], method = 'post') {
-    return (await https.build(path).method(method).create()(args))?.data
+    try {
+        return (await https.build(path).method(method).create()(args))?.data
+    } catch (e) {
+        console.log(e)
+    }
+
+
 }
 
 /**下面是召唤师summoner方面的信息
@@ -206,6 +227,16 @@ export async function sendMessageToFriend(summonerName, message) {
  *
  */
 
+export async function selectChampion(championId) {
+    return postData(`/lol-champ-select/v1/session/actions/${1}`, {
+        "actorCellId": 0,
+        "championId": championId,
+        "completed": true,
+        "id": 1,
+        "isAllyAction": true,
+        "type": "pick"
+    }, 'patch')
+}
 
 /**
  * 获取当前选中的英雄信息
@@ -268,8 +299,12 @@ export async function champSelectGetSummonerInfo(slotid) {
 /**
  * 锁定英雄接口，需要先选择英雄
  */
-export async function selectChampion() {
-    return await postData(`/lol-champ-select/v1/session/actions/${1}/select`,)
+export async function lockChampion() {
+    try {
+        return await postData(`/lol-champ-select/v1/session/actions/${1}/select`,)
+    } catch (error) {
+        console.log('锁定英雄失败')
+    }
 }
 
 /**
@@ -332,12 +367,16 @@ export async function matchAccept() {
         console.log(`正在尝试自动接受对局`)
         return temp_data
     } catch (error) {
-        console.log('因取消排队，自动接受对局失败')
+        console.log('自动接受对局失败')
     }
 }
 
 export async function getGameflowPhase() {
-    return await getData('/lol-gameflow/v1/gameflow-phase')
+    try {
+        return await getData('/lol-gameflow/v1/gameflow-phase')
+    } catch (error) {
+        console.log('getGameflowPhase函数出错，获取游戏进程流失败')
+    }
 }
 
 

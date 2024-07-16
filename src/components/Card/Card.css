@@ -1,0 +1,10 @@
+.CustomCard {
+  border: 1px solid #fff;
+  border-radius: 3px;
+  transition: .2s ease !important;
+}
+
+.CustomCard:hover {
+  border: 1px solid #30abe3;
+  transform: scale(1.01);
+}

@@ -1,41 +1,75 @@
-import {getGameflowPhase} from "./LCU-APIS.mjs";
+import {
+    championsInfo, findChampionID,
+    getGameflowPhase,
+    lockChampion,
+    matchAccept,
+    matchStart,
+    selectChampion,
+} from "./LCU-APIS.mjs";
+
+let championNameToBeSelect=undefined//设置初始时需要秒选的英雄
+export function setChampionName(name){//设置需要秒选的英雄
+    championNameToBeSelect=name
+    console.log('设置需要秒选的英雄为',name)
+}
+
+const ACTIONS = {
+    None() {
+    },
+    Matchmaking() {
+    },
+    Lobby() {
+        if (STATES.isAutoStartMatch) {
+            matchStart()
+        }
+    },
+    ReadyCheck() {
+        if (STATES.isAutoAcceptMatch) {
+            matchAccept()
+        }
+    },
+    ChampSelect() {
+        if (STATES.isAutoSelectChampion) {
+            selectChampion(findChampionID(championNameToBeSelect)).then(r => {})
+            lockChampion(findChampionID(championNameToBeSelect)).then(r => {})
+        }
+    },
+    InProgress() {
+    },
+    PreEndOfGame() {
+    },
+    EndOfGame() {
+    },
+    Reconnect() {
+        console.log('重新连接')
+    }
+}
+
+const STATES = {
+    isAutoStartMatch: false,
+    isAutoAcceptMatch: false,
+    isAutoSelectChampion: false,
+}
+
+
+export function stateChanger(name, state) {
+    if (name in STATES) {
+        STATES[name] = state;
+        console.log(`状态${name}更改为${state}`)
+    } else console.log('没有这个状态,更改失败')
+}
 
 const runCenterHandler = () => {
     setInterval(async () => {
-        let gamePhaseData = await getGameflowPhase()
-        console.log(gamePhaseData)
-        switch (gamePhaseData) {
-            case "None":
-                break//表示在主界面
-
-            case "Matchmaking":
-                break  //表示正在排队
-
-            case "Lobby": //表示在房间中
-                break
-
-            case "ReadyCheck": //表示找到对局，等待接受
-                break
-
-            case "ChampSelect": //表示正在选择角色状态
-                break
-
-            case "InProgress": //表示正在游戏中
-                break
-
-            case "PreEndOfGame":    //游戏即将结束
-                break
-
-            case "EndOfGame":    //游戏已经结束
-                break
-
-            case "Reconnect":   //重新连接
-                break
-
-            default:
-                break
+        try {
+            let gamePhaseData = await getGameflowPhase()
+            //console.log(`当前游戏阶段${gamePhaseData}`)
+            ACTIONS[gamePhaseData]?.()//根据游戏阶段执行相应的操作
+        } catch (error) {
+            console.log('获取游戏进程流失败',error)
         }
-    }, 1000)
+
+    }, 500)
 }
 
 runCenterHandler()

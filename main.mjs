@@ -1,7 +1,8 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import {app, BrowserWindow, ipcMain} from 'electron';
 import path from 'node:path';
 import url from 'url';
-import { autoAcceptMatch, unAutoAcceptMatch } from './backend/wsUtils.mjs';
+import {setChampionName, stateChanger} from "./backend/centerHandler.mjs";
+import {findChampionID, selectChampion} from "./backend/LCU-APIS.mjs";
 // 获取在 package.json 中的命令脚本传入的参数，来判断是开发还是生产环境
 const mode = process.argv[2];
 const __dirname = import.meta.dirname;
@@ -45,14 +46,29 @@ ipcMain.on('maximize', event => {
     mainWindow.maximize()//最大化窗口
 })
 
+//监听centerHandler状态的更改请求，并执行相应的操作
+ipcMain.on('changeState', (event, arg) => {
+    stateChanger(arg.name, arg.state)
+})
+
 
 //开启自动匹配功能
 ipcMain.on('LCU-matchAccept', async event => {
     console.log('开启自动匹配功能')
-    await autoAcceptMatch()
+    stateChanger('isAutoAcceptMatch', true)
 })
 //关闭自动匹配功能
 ipcMain.on('LCU-cancleMatchAccept', async event => {
     console.log('关闭自动匹配功能')
-    await unAutoAcceptMatch()
+    stateChanger('isAutoAcceptMatch', false)
+})
+
+//设置自动选择英雄功能所需要选择的英雄
+ipcMain.on('setSelectChampion', async (event, arg) => {
+    setChampionName(arg.nameOrID)
+})
+
+//查找当前英雄或名字是否存在
+ipcMain.handle('LCU:FindChampion', async (event, arg) => {
+    return (await findChampionID(arg.nameOrID)) !== undefined
 })

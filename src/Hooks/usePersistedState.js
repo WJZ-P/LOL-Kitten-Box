@@ -7,7 +7,7 @@ export default function usePersistedState(key, initialState) {
 
     function getCachedState() {
         let cachedState = storage.getItem(key);//获取缓存的状态
-        console.log(cachedState)
+        //console.log(cachedState)
         return cachedState && JSON.parse(cachedState).value//返回缓存的状态
     }
 
