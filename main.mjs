@@ -1,8 +1,15 @@
-import {app, BrowserWindow, ipcMain} from 'electron';
+import {app, BrowserWindow, ipcMain, globalShortcut} from 'electron';
 import path from 'node:path';
 import url from 'url';
 import {setChampionName, stateChanger} from "./backend/centerHandler.mjs";
-import {findChampionID, selectChampion} from "./backend/LCU-APIS.mjs";
+import {findChampionID,
+
+
+
+
+
+    selectChampion} from "./backend/LCU-APIS.mjs";
+import {test123} from "./backend/autoText.mjs";
 // 获取在 package.json 中的命令脚本传入的参数，来判断是开发还是生产环境
 const mode = process.argv[2];
 const __dirname = import.meta.dirname;
@@ -38,11 +45,20 @@ app.on("window-all-closed", () => {
     app.quit()
 })
 
-ipcMain.on('minimize', event => {
+app.on('will-quit', () => {
+  // 注销所有快捷键
+  globalShortcut.unregisterAll()
+})
+
+ipcMain.on('minimize',
+
+        event => {
     mainWindow.minimize()//最小化窗口
 })
 
-ipcMain.on('maximize', event => {
+ipcMain.on('maximize',
+
+        event => {
     mainWindow.maximize()//最大化窗口
 })
 
@@ -53,7 +69,8 @@ ipcMain.on('changeState', (event, arg) => {
 
 
 //开启自动匹配功能
-ipcMain.on('LCU-matchAccept', async event => {
+ipcMain.on('LCU-matchAccept', async
+    event => {
     console.log('开启自动匹配功能')
     stateChanger('isAutoAcceptMatch', true)
 })
@@ -71,4 +88,9 @@ ipcMain.on('setSelectChampion', async (event, arg) => {
 //查找当前英雄或名字是否存在
 ipcMain.handle('LCU:FindChampion', async (event, arg) => {
     return (await findChampionID(arg.nameOrID)) !== undefined
+})
+
+app.whenReady().then(() => {
+    if(globalShortcut.register('F2', test123)) console.log('注册成功啦哈哈')
+    else console.log('注册失败了！')
 })

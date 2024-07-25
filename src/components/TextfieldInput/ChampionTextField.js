@@ -9,6 +9,7 @@ export function ChampionTextField() {
 
     useEffect(() => {
         window.LCUAPI.setSelectChampion(text);
+
         (async () => {
             if (await window.LCUAPI.hasFindChampion(text)) {
                 setError(false)
