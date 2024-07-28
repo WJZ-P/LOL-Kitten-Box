@@ -1,5 +1,6 @@
 import {Hexgate as HttpsClient, LcuClient as WsClient} from "hexgate";
 import {auth, poll} from "hexgate";
+import cluster from "cluster";
 
 async function initial() {
     console.log("初始化中...正在尝试获取鉴权")
@@ -9,10 +10,26 @@ async function initial() {
 //console.log(credentials)//打印获取到的内容
 }
 
-const credentials = await initial()
+let credentials =undefined
+let https=undefined
+let ws=undefined
+// if(cluster.isPrimary){
+//     console.log('主进程，启动！')
+//     cluster.fork()//启动子进程
+// }
 
-const https = new HttpsClient(credentials)//构建http链接
-const ws = new WsClient(credentials)//构建ws链接
+// else{
+//     console.log('哈哈我是子进程，我要启动然后获取credentials了！')
+    credentials = await initial()//子进程获取credentials
+    // console.log('子进程获取credentials成功！')
+    https = new HttpsClient(credentials)//构建http链接
+    ws = new WsClient(credentials)//构建ws链接
+// }
+
+
+// const credentials = await initial()
+// const https = new HttpsClient(credentials)//构建http链接
+// const ws = new WsClient(credentials)//构建ws链接
 
 export const summonerInfo = await getSummonerInfo()//召唤师信息
 const {

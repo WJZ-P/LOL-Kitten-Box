@@ -2,14 +2,9 @@ import {app, BrowserWindow, ipcMain, globalShortcut} from 'electron';
 import path from 'node:path';
 import url from 'url';
 import {setChampionName, stateChanger} from "./backend/centerHandler.mjs";
-import {findChampionID,
-
-
-
-
-
-    selectChampion} from "./backend/LCU-APIS.mjs";
+import {findChampionID, selectChampion} from "./backend/LCU-APIS.mjs";
 import {test123} from "./backend/autoText.mjs";
+
 // 获取在 package.json 中的命令脚本传入的参数，来判断是开发还是生产环境
 const mode = process.argv[2];
 const __dirname = import.meta.dirname;
@@ -46,21 +41,21 @@ app.on("window-all-closed", () => {
 })
 
 app.on('will-quit', () => {
-  // 注销所有快捷键
-  globalShortcut.unregisterAll()
+    // 注销所有快捷键
+    globalShortcut.unregisterAll()
 })
 
 ipcMain.on('minimize',
 
-        event => {
-    mainWindow.minimize()//最小化窗口
-})
+    event => {
+        mainWindow.minimize()//最小化窗口
+    })
 
 ipcMain.on('maximize',
 
-        event => {
-    mainWindow.maximize()//最大化窗口
-})
+    event => {
+        mainWindow.maximize()//最大化窗口
+    })
 
 //监听centerHandler状态的更改请求，并执行相应的操作
 ipcMain.on('changeState', (event, arg) => {
@@ -69,17 +64,16 @@ ipcMain.on('changeState', (event, arg) => {
 
 
 //开启自动匹配功能
-ipcMain.on('LCU-matchAccept', async
-    event => {
+ipcMain.on('LCU-matchAccept', async event => {
     console.log('开启自动匹配功能')
     stateChanger('isAutoAcceptMatch', true)
 })
+
 //关闭自动匹配功能
 ipcMain.on('LCU-cancleMatchAccept', async event => {
     console.log('关闭自动匹配功能')
     stateChanger('isAutoAcceptMatch', false)
 })
-
 //设置自动选择英雄功能所需要选择的英雄
 ipcMain.on('setSelectChampion', async (event, arg) => {
     setChampionName(arg.nameOrID)

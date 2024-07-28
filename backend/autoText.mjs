@@ -22,12 +22,13 @@ export async function typeContent(content) {
 }
 
 export async function test123() {
+    await keyboard.type(Key.Enter)
     await pasteFromClipBoard()
     await keyboard.type(Key.Enter)
 }
 
 
-// 定期执行 test 函数
+// //定期执行 test 函数
 // (async () => {
 //     while (1) {
 //         await test123();
