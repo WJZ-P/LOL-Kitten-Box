@@ -17,7 +17,7 @@ let ws=undefined
 //     console.log('主进程，启动！')
 //     cluster.fork()//启动子进程
 // }
-
+//
 // else{
 //     console.log('哈哈我是子进程，我要启动然后获取credentials了！')
     credentials = await initial()//子进程获取credentials
