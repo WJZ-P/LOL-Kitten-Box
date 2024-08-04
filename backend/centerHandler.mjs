@@ -1,10 +1,11 @@
 import {
-    championsInfo, findChampionID,
+    findChampionID,
     getGameflowPhase,
     lockChampion,
     matchAccept,
     matchStart,
     selectChampion,
+    task
 } from "./LCU-APIS.mjs";
 
 let championNameToBeSelect=undefined//设置初始时需要秒选的英雄
@@ -58,14 +59,16 @@ export function stateChanger(name, state) {
     } else console.log('没有这个状态,更改失败')
 }
 
-const runCenterHandler = () => {
+const runCenterHandler = async () => {
+    await task//等待LCU-API的task被完成，也就是LOL启动
+
     setInterval(async () => {
         try {
             let gamePhaseData = await getGameflowPhase()
             //console.log(`当前游戏阶段${gamePhaseData}`)
             ACTIONS[gamePhaseData]?.()//根据游戏阶段执行相应的操作
         } catch (error) {
-            console.log('获取游戏进程流失败',error)
+            console.log('获取游戏进程流失败', error)
         }
 
     }, 500)

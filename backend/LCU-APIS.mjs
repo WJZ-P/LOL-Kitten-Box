@@ -1,6 +1,11 @@
 import {Hexgate as HttpsClient, LcuClient as WsClient} from "hexgate";
 import {auth, poll} from "hexgate";
-import cluster from "cluster";
+
+
+let resolvetask = null;
+export const task = new Promise((resolve) => {
+    resolvetask = resolve;
+})//判断hexgate是否启动
 
 async function initial() {
     console.log("初始化中...正在尝试获取鉴权")
@@ -10,51 +15,34 @@ async function initial() {
 //console.log(credentials)//打印获取到的内容
 }
 
-let credentials =undefined
-let https=undefined
-let ws=undefined
-// if(cluster.isPrimary){
-//     console.log('主进程，启动！')
-//     cluster.fork()//启动子进程
-// }
-//
-// else{
-//     console.log('哈哈我是子进程，我要启动然后获取credentials了！')
-    credentials = await initial()//子进程获取credentials
-    // console.log('子进程获取credentials成功！')
+let credentials = undefined
+let https = undefined
+let ws = undefined;
+
+let summonerInfo = null;
+let championsInfo = null;
+// summonerId,//召唤师ID,int
+// accountId,//召唤师账户ID,int
+// displayName,//召唤师名字,string,一般和gameName和internalName是一样的
+// puuid,//召唤师PUUID,string
+(async () => {
+    credentials = await initial()
     https = new HttpsClient(credentials)//构建http链接
     ws = new WsClient(credentials)//构建ws链接
-// }
+
+    resolvetask()//鉴权获取成功后，通过resolve，启动全部需要等待task完成的任务
+
+    summonerInfo = await getSummonerInfo()//召唤师信息
+    championsInfo = await getChampionsInfo()//英雄信息
+})()
 
 
-// const credentials = await initial()
-// const https = new HttpsClient(credentials)//构建http链接
-// const ws = new WsClient(credentials)//构建ws链接
+console.log('我可以打印出来辣！哇哈哈')
 
-export const summonerInfo = await getSummonerInfo()//召唤师信息
-const {
-    summonerId,//召唤师ID,int
-    accountId,//召唤师账户ID,int
-    displayName,//召唤师名字,string,一般和gameName和internalName是一样的
-    puuid,//召唤师PUUID,string
-} = summonerInfo
-
-export const championsInfo = (await getData(`/lol-champions/v1/inventories/${summonerId}/champions-minimal`)).map(
-    (singaleChampionInfo) => ({
-        title: singaleChampionInfo.name,
-        id: singaleChampionInfo.id,
-        name: singaleChampionInfo.title
-    })
-)
 
 /*
 根据名字或者称号查找英雄ID
  */
-export function findChampionID(name) {
-    return championsInfo.find(champion => (champion.name === name || champion.title === name))?.id
-}
-
-const friendsInfo = await getFriendsInfo()
 
 const the5v5LobbyConfig = {
     'customGameLobby': {
@@ -87,6 +75,21 @@ const the5v5LobbyConfig = {
 //睡眠函数
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export async function getChampionsInfo() {
+    await task//等待hexgate启动完成
+    return (await getData(`/lol-champions/v1/inventories/${summonerInfo.summonerId}/champions-minimal`)).map(
+        (singaleChampionInfo) => ({
+            title: singaleChampionInfo.name,
+            id: singaleChampionInfo.id,
+            name: singaleChampionInfo.title
+        }))
+}
+
+export function findChampionID(name) {
+    if (championsInfo === undefined) return;
+    return championsInfo.find?.(champion => (champion.name === name || champion.title === name))?.id
 }
 
 //把json格式化成string
@@ -130,6 +133,8 @@ export async function postData(path, args = [], method = 'post') {
  * @returns {Promise<*>} 返回的是类，为API返回的data
  */
 export async function getSummonerInfo(method = 'get') {
+    await task//等待hexgate启动完成
+
     let func_to_run = https.build('/lol-summoner/v1/current-summoner').method(method).create()
     return (await func_to_run()).data
 }
