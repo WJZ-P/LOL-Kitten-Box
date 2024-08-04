@@ -1,8 +1,8 @@
 import {Hexgate as HttpsClient, LcuClient as WsClient} from "hexgate";
 import {auth, poll} from "hexgate";
 
-
 let resolvetask = null;
+
 export const task = new Promise((resolve) => {
     resolvetask = resolve;
 })//判断hexgate是否启动
@@ -25,10 +25,11 @@ let championsInfo = null;
 // accountId,//召唤师账户ID,int
 // displayName,//召唤师名字,string,一般和gameName和internalName是一样的
 // puuid,//召唤师PUUID,string
+
 (async () => {
     credentials = await initial()
     https = new HttpsClient(credentials)//构建http链接
-    ws = new WsClient(credentials)//构建ws链接
+    //ws = new WsClient(credentials)//构建ws链接,在先开软件后开LOL的情况下会卡死
 
     resolvetask()//鉴权获取成功后，通过resolve，启动全部需要等待task完成的任务
 
@@ -88,7 +89,7 @@ export async function getChampionsInfo() {
 }
 
 export function findChampionID(name) {
-    if (championsInfo === undefined) return;
+    if (championsInfo === null) return;
     return championsInfo.find?.(champion => (champion.name === name || champion.title === name))?.id
 }
 

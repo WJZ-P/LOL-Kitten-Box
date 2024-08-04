@@ -2,7 +2,7 @@ import {app, BrowserWindow, ipcMain, globalShortcut} from 'electron';
 import path from 'node:path';
 import url from 'url';
 import {setChampionName, stateChanger} from "./backend/centerHandler.mjs";
-import {findChampionID, selectChampion} from "./backend/LCU-APIS.mjs";
+import {findChampionID,task} from "./backend/LCU-APIS.mjs";
 import {test123} from "./backend/autoText.mjs";
 
 // 获取在 package.json 中的命令脚本传入的参数，来判断是开发还是生产环境
@@ -83,6 +83,9 @@ ipcMain.on('setSelectChampion', async (event, arg) => {
 ipcMain.handle('LCU:FindChampion', async (event, arg) => {
     return (await findChampionID(arg.nameOrID)) !== undefined
 })
+
+//直接返回task,目的是检测LOL是否启动
+ipcMain.handle('LCU:HasLolLaunch',async (event, arg) => task)
 
 app.whenReady().then(() => {
     if(globalShortcut.register('F2', test123)) console.log('注册成功啦哈哈')

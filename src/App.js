@@ -6,7 +6,7 @@ import React from "react";
 import MyDrawer from "./components/DrawerComponent/MyDrawer.js";
 import MainFunctionPage from "./routes/MainFunctionPage.js";
 const green = '#00ff43'//定义绿色
-const blue = '#66ccff'//定义蓝色
+const blue = '#7bcaee'//定义蓝色
 let theme = createTheme({
     palette: {
         primary: {

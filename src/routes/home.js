@@ -10,57 +10,67 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {AccessibleForward} from "@mui/icons-material";
 
 export default function Home() {
-    return (<div className="App Page Home">
-            <header className="App-header">
-                {/*这是我的抽屉组件*/}
-                {/*<MyDrawer/>这里注释掉是因为已经通过route渲染了*/}
-                <img src={logo} className="App-logo" alt="logo"/>
-                <p>
-                    Edit <code>src/App.js</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    英雄联盟Kitten小助手
-                </a>
-                <MyButton/>
-                <Stack direction="row" spacing={2}>
-                    {/*很奇怪，stack里面改按钮大小，全部按钮大小是根据最大的来}*/}
-                    <Box sx={{'& button': {m: 1}}}>
-                        {/*所以引入了box*/}
-                        <Button variant='text' color="primary" size='small' startIcon={<AccessibleForward/>}>
-                            按钮1
-                        </Button>
-                        <Button variant="contained" color="primary" size='midium' endIcon={<SendIcon/>}>
-                            按钮2
-                        </Button>
-                        <Button variant="outlined" color="primary" size={'large'} endIcon={<FavoriteBorderIcon/>}>
-                            按钮3
-                        </Button>
-                        <SimpleBackDropButton/>
-                    </Box>
-                </Stack>
-                <FormControlLabel
-                    value="嘻嘻哈哈"
-                    control={<Switch color="primary"/>}
-                    label="打开是最大化应用，关闭是最小化应用"
-                    labelPlacement="start"
-                    onChange={handleSwitch}
-                />
-                <Box display="flex" alignItems="center"
-                     sx={{p: 2, border: 5, borderColor: 'primary.light', bgcolor: 'primary'}}>
-                    <Avatar alt="WJZ_P" src={process.env.PUBLIC_URL + '/wjz_p.jpg'}
-                            sx={{mr: 2, height: 60, width: 60}}/>
-                    <Typography variant="h5" component="h1">By WJZ_P</Typography>
-                </Box>
-            </header>
-            <Tic_tac_toe/>
+    const [text, setText] = useState('请启动LOL后再打开本软件！')
 
-            {/*下面是一个按钮*/}
-        </div>)
+
+    useEffect(() => {
+        (async () => {
+            await window.LCUAPI.hasLOLLaunch()
+            setText('已检测到LOL启动！')
+        })()
+
+    }, []);
+
+
+    return (<div className="App Page Home">
+        <header className="App-header">
+            {/*这是我的抽屉组件*/}
+            {/*<MyDrawer/>这里注释掉是因为已经通过route渲染了*/}
+            <img src={logo} className="App-logo" alt="logo"/>
+            <p>{text}</p>
+            <a
+                className="App-link"
+                href="https://reactjs.org"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                英雄联盟Kitten小助手
+            </a>
+            <MyButton/>
+            <Stack direction="row" spacing={2}>
+                {/*很奇怪，stack里面改按钮大小，全部按钮大小是根据最大的来}*/}
+                <Box sx={{'& button': {m: 1}}}>
+                    {/*所以引入了box*/}
+                    <Button variant='text' color="primary" size='small' startIcon={<AccessibleForward/>}>
+                        按钮1
+                    </Button>
+                    <Button variant="contained" color="primary" size='midium' endIcon={<SendIcon/>}>
+                        按钮2
+                    </Button>
+                    <Button variant="outlined" color="primary" size={'large'} endIcon={<FavoriteBorderIcon/>}>
+                        按钮3
+                    </Button>
+                    <SimpleBackDropButton/>
+                </Box>
+            </Stack>
+            <FormControlLabel
+                value="嘻嘻哈哈"
+                control={<Switch color="primary"/>}
+                label="打开是最大化应用，关闭是最小化应用"
+                labelPlacement="start"
+                onChange={handleSwitch}
+            />
+            <Box display="flex" alignItems="center"
+                 sx={{p: 2, border: 5, borderColor: 'primary.light', bgcolor: 'primary'}}>
+                <Avatar alt="WJZ_P" src={process.env.PUBLIC_URL + '/wjz_p.jpg'}
+                        sx={{mr: 2, height: 60, width: 60}}/>
+                <Typography variant="h5" component="h1">By WJZ_P</Typography>
+            </Box>
+        </header>
+        <Tic_tac_toe/>
+
+        {/*下面是一个按钮*/}
+    </div>)
 }
 
 function handleSwitch(event) {

@@ -12,7 +12,8 @@ contextBridge.exposeInMainWorld('utils',{
 //下面定义一些LCUAPI的方法
 contextBridge.exposeInMainWorld('LCUAPI',{
   setSelectChampion:(nameOrID)=>{ipcRenderer.send('setSelectChampion',{nameOrID})},
-  hasFindChampion:(nameOrID) =>ipcRenderer.invoke('LCU:FindChampion',{nameOrID})
+  hasFindChampion:(nameOrID) =>ipcRenderer.invoke('LCU:FindChampion',{nameOrID}),
+  hasLOLLaunch:()=> ipcRenderer.invoke('LCU:HasLolLaunch')
 })
 
 //定义一些方法来传递centerHandler状态的更改请求
